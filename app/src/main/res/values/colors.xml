@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="primary_color">@color/teal_700</color>
     <color name="secondary_color">@color/teal_200</color>
+    <color name="background">#FF181818</color>
 </resources>

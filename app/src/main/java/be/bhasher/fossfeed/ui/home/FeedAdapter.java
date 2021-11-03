@@ -1,5 +1,6 @@
 package be.bhasher.fossfeed.ui.home;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +21,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import be.bhasher.fossfeed.FeedItemActivity;
 import be.bhasher.fossfeed.R;
 
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -91,7 +94,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return this.feedChannel.size();
     }
 
-    static class ViewHolderFeed extends RecyclerView.ViewHolder /*implements View.OnClickListener*/ {
+    class ViewHolderFeed extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final ImageView image;
         private final TextView title;
         private final TextView subtitle;
@@ -101,6 +104,15 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.image = view.findViewById(R.id.image);
             this.title = view.findViewById(R.id.title);
             this.subtitle = view.findViewById(R.id.subtitle);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            Intent intent = new Intent(view.getContext(), FeedItemActivity.class);
+            intent.putExtra("FeedItem", feedChannel.get(position));
+            view.getContext().startActivity(intent);
         }
     }
 }

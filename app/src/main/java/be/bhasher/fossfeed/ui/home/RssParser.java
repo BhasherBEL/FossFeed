@@ -1,9 +1,11 @@
 package be.bhasher.fossfeed.ui.home;
 
 import android.os.AsyncTask;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 

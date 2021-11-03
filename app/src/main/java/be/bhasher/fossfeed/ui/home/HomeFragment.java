@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import be.bhasher.fossfeed.R;
-import be.bhasher.fossfeed.databinding.ContentMainBinding;
-import be.bhasher.fossfeed.databinding.FragmentHomeBinding;
 import be.bhasher.fossfeed.utils.cache.AppDatabase;
 import be.bhasher.fossfeed.utils.cache.FeedsDAO;
 
