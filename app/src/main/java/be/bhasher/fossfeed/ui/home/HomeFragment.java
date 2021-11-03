@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -28,6 +29,14 @@ public class HomeFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         new RssParser(view).execute();
+
+        SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshFeeds);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new RssParser(view, swipeRefreshLayout).execute();
+            }
+        });
 
         return view;
     }

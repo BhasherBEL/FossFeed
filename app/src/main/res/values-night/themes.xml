@@ -16,14 +16,13 @@
 
     <style name="ItemTitle">
         <item name="color">@color/white</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="textAllCaps">true</item>
     </style>
 
     <style name="ItemSubTitle">
-        <item name="color">#CCCCCC</item>
-        <item name="android:textSize">15sp</item>
+        <item name="color">#AAAAAA</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 </resources>

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import be.bhasher.fossfeed.R;
 
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final Feed feed;
+    public final Feed feed;
 
     public FeedAdapter(Feed feed){
         this.feed = feed;
@@ -43,6 +43,13 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         viewHolderFeed.title.setText(feedItem.title);
         viewHolderFeed.subtitle.setText(feedItem.getSubtitle());
         if(feedItem.imageUrl != null) new DownloadImageTask(viewHolderFeed.image).execute(feedItem.imageUrl);
+    }
+
+    //TODO fix image bug
+    @Override
+    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder){
+        ViewHolderFeed viewHolderFeed = (ViewHolderFeed) holder;
+        viewHolderFeed.image.setImageDrawable(null);
     }
 
     private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap>{

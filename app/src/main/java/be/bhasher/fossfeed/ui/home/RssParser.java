@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -23,9 +24,15 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
 
     private final Feed feed = new Feed();
     private final View view;
+    private final SwipeRefreshLayout swipeRefreshLayout;
 
     public RssParser(View view){
+        this(view, null);
+    }
+
+    public RssParser(View view, SwipeRefreshLayout swipeRefreshLayout){
         this.view = view;
+        this.swipeRefreshLayout = swipeRefreshLayout;
     }
 
     private void parseFeed(InputStream inputStream) throws XmlPullParserException, IOException {
@@ -119,5 +126,6 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
         }else{
             Toast.makeText(MainActivity.context, "Error while scrapping", Toast.LENGTH_LONG).show();
         }
+        if(swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
     }
 }
