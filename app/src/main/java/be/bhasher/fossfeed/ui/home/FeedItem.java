@@ -1,15 +1,36 @@
 package be.bhasher.fossfeed.ui.home;
 
-public class FeedItem {
-    public final String title;
-    public final String subtitle;
-    public final String link;
-    public final String imageUrl;
+import java.io.Serializable;
+import java.text.ParseException;
+import java.util.ArrayList;
 
-    public FeedItem(String title, String subtitle, String link, String imageUrl){
-        this.title = title;
-        this.subtitle = subtitle;
-        this.link = link;
-        this.imageUrl = imageUrl;
+import be.bhasher.fossfeed.utils.DateUtils;
+
+public class FeedItem implements Serializable {
+    public String title = null;
+    public String link = null;
+    public String imageUrl = null;
+    public String date = null;
+    public String author = null;
+    public String description = null;
+    public String guid = null;
+    public final ArrayList<String> categories = new ArrayList<>();
+    public final Feed feed;
+
+    public FeedItem(Feed feed){
+        this.feed = feed;
+    }
+
+    public String getDateDiff(){
+        try {
+            return DateUtils.formatDate(DateUtils.parseDate(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    public String getSubtitle(){
+        return getDateDiff() + " · " + feed.title;
     }
 }

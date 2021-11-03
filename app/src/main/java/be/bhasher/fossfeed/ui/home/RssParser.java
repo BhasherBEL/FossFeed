@@ -1,7 +1,6 @@
 package be.bhasher.fossfeed.ui.home;
 
 import android.os.AsyncTask;
-import android.util.Xml;
 import android.view.View;
 import android.widget.Toast;
 
@@ -9,19 +8,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
-import java.util.ArrayList;
 
 import be.bhasher.fossfeed.MainActivity;
 import be.bhasher.fossfeed.R;
 
 public class RssParser extends AsyncTask<Void, Void, Boolean> {
 
-    private final ArrayList<FeedItem> feedItems = new ArrayList<>();
+    private final Feed feed = new Feed();
     private final View view;
 
     public RssParser(View view){
@@ -29,55 +29,71 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
     }
 
     private void parseFeed(InputStream inputStream) throws XmlPullParserException, IOException {
-        XmlPullParser xmlPullParser = Xml.newPullParser();
-        xmlPullParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-        xmlPullParser.setInput(inputStream, null);
+        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+        XmlPullParser xmlPullParser = factory.newPullParser();
+        Reader reader = new InputStreamReader(inputStream);
+        xmlPullParser.setInput(reader);
 
-        boolean isItem = false;
-        String title = null;
-        String link = null;
-        String description = null;
-        String imageUrl = null;
+        FeedItem current = new FeedItem(feed);
 
-        xmlPullParser.nextTag();
-        while(xmlPullParser.next() != XmlPullParser.END_DOCUMENT){
-            int eventType = xmlPullParser.getEventType();
-            String name = xmlPullParser.getName();
-            if(name == null) continue;
-            if(eventType == XmlPullParser.END_TAG){
-                if(name.equalsIgnoreCase("item")) isItem = false;
-                continue;
-            }else if(eventType == XmlPullParser.START_TAG && name.equalsIgnoreCase("item")){
-                isItem = true;
-                continue;
-            }
+        boolean inItem = false;
+        boolean inChannel = false;
 
-            String text = "";
+        int eventType = xmlPullParser.getEventType();
 
+        while(eventType != XmlPullParser.END_DOCUMENT){
+            if(eventType == XmlPullParser.START_TAG){
+                if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_CHANNEL)) inChannel = true;
 
-            if(xmlPullParser.next() == XmlPullParser.TEXT){
-                text = xmlPullParser.getText();
-                xmlPullParser.nextTag();
-            }
-
-            if(name.equalsIgnoreCase("title")) title = text;
-            else if(name.equalsIgnoreCase("link")) link = text;
-            else if(name.equalsIgnoreCase("description")) description = text;
-            else if(name.equalsIgnoreCase("enclosure")) imageUrl = xmlPullParser.getAttributeValue(XmlPullParser.NO_NAMESPACE, "url");
-
-            if(title != null && link != null && description != null){
-                if(isItem){
-                    FeedItem item = new FeedItem(title, description, link, imageUrl);
-                    System.out.println(imageUrl);
-                    feedItems.add(item);
+                else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM)){
+                    inItem = true;
                 }
 
-                title = null;
-                link = null;
-                description = null;
-                isItem = false;
-            }
+                else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_TITLE)){
+                    if(inItem) current.title = xmlPullParser.nextText().trim();
+                    else if(inChannel) feed.title = xmlPullParser.nextText().trim();
 
+                }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_LINK)){
+                    if(inItem) current.link = xmlPullParser.nextText().trim();
+                    else if(inChannel) feed.link = xmlPullParser.nextText().trim();
+
+                }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_AUTHOR)){
+                    if(inItem) current.author = xmlPullParser.nextText().trim();
+
+                }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_CATEGORY)){
+                    if(inItem) current.categories.add(xmlPullParser.nextText().trim());
+
+                }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_THUMBNAIL)
+                || xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_MEDIA_CONTENT)
+                        || xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_ENCLOSURE) //TODO Can be a video/audio
+                        || xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_IMAGE_NEWS)){
+                    if(inItem) current.imageUrl = xmlPullParser.getAttributeValue(XmlPullParser.NO_NAMESPACE, RSSKeywords.RSS_ITEM_URL);
+
+                }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_DESCRIPTION)){
+                    if(inItem) current.description = xmlPullParser.nextText().trim();
+                    else if(inChannel) feed.description = xmlPullParser.nextText().trim();
+
+                }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_PUB_DATE)
+                || xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_TIME)){
+                    if(inItem) current.date = xmlPullParser.nextText().trim();
+
+                }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_GUID)){
+                    if(inItem) current.guid = xmlPullParser.nextText().trim();
+
+                }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_CHANNEL_LAST_BUILD_DATE)){
+                    if(inChannel) feed.lastBuild = xmlPullParser.nextText().trim();
+                }
+
+            }else if(eventType == XmlPullParser.END_TAG){
+                 if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM)){
+                     inItem = false;
+                     feed.add(current);
+                     current = new FeedItem(feed);
+                 }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_CHANNEL)){
+                     inChannel = false;
+                 }
+            }
+            eventType = xmlPullParser.next();
         }
     }
 
@@ -98,7 +114,7 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean success){
         if(success){
             final RecyclerView recyclerFeeds = view.findViewById(R.id.recyclerFeeds);
-            FeedAdapter feedAdapter = new FeedAdapter(feedItems);
+            FeedAdapter feedAdapter = new FeedAdapter(feed);
             recyclerFeeds.setAdapter(feedAdapter);
         }else{
             Toast.makeText(MainActivity.context, "Error while scrapping", Toast.LENGTH_LONG).show();

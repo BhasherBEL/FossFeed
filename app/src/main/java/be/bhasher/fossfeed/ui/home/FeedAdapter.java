@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import be.bhasher.fossfeed.R;
 
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final ArrayList<FeedItem> feedItems;
+    private final Feed feed;
 
-    public FeedAdapter(ArrayList<FeedItem> feedItems){
-        this.feedItems = feedItems;
+    public FeedAdapter(Feed feed){
+        this.feed = feed;
     }
 
     @NonNull
@@ -39,9 +39,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewHolderFeed viewHolderFeed = (ViewHolderFeed) holder;
-        FeedItem feedItem = this.feedItems.get(position);
+        FeedItem feedItem = this.feed.get(position);
         viewHolderFeed.title.setText(feedItem.title);
-        viewHolderFeed.subtitle.setText(feedItem.subtitle);
+        viewHolderFeed.subtitle.setText(feedItem.getSubtitle());
         if(feedItem.imageUrl != null) new DownloadImageTask(viewHolderFeed.image).execute(feedItem.imageUrl);
     }
 
@@ -82,7 +82,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return this.feedItems.size();
+        return this.feed.size();
     }
 
     static class ViewHolderFeed extends RecyclerView.ViewHolder /*implements View.OnClickListener*/ {
