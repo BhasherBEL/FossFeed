@@ -18,15 +18,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 
 import be.bhasher.fossfeed.R;
 
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public final Feed feed;
+    public final FeedChannel feedChannel;
 
-    public FeedAdapter(Feed feed){
-        this.feed = feed;
+    public FeedAdapter(FeedChannel feedChannel){
+        this.feedChannel = feedChannel;
     }
 
     @NonNull
@@ -39,7 +38,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewHolderFeed viewHolderFeed = (ViewHolderFeed) holder;
-        FeedItem feedItem = this.feed.get(position);
+        FeedItem feedItem = this.feedChannel.get(position);
         viewHolderFeed.title.setText(feedItem.title);
         viewHolderFeed.subtitle.setText(feedItem.getSubtitle());
         if(feedItem.imageUrl != null) new DownloadImageTask(viewHolderFeed.image).execute(feedItem.imageUrl);
@@ -89,7 +88,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return this.feed.size();
+        return this.feedChannel.size();
     }
 
     static class ViewHolderFeed extends RecyclerView.ViewHolder /*implements View.OnClickListener*/ {

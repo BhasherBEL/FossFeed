@@ -12,14 +12,18 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import be.bhasher.fossfeed.R;
 import be.bhasher.fossfeed.databinding.ContentMainBinding;
 import be.bhasher.fossfeed.databinding.FragmentHomeBinding;
+import be.bhasher.fossfeed.utils.cache.AppDatabase;
+import be.bhasher.fossfeed.utils.cache.FeedsDAO;
 
 public class HomeFragment extends Fragment{
 
@@ -31,12 +35,7 @@ public class HomeFragment extends Fragment{
         new RssParser(view).execute();
 
         SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshFeeds);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new RssParser(view, swipeRefreshLayout).execute();
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> new RssParser(view, swipeRefreshLayout).execute());
 
         return view;
     }

@@ -15,10 +15,10 @@ public class FeedItem implements Serializable {
     public String description = null;
     public String guid = null;
     public final ArrayList<String> categories = new ArrayList<>();
-    public final Feed feed;
+    public final FeedChannel feedChannel;
 
-    public FeedItem(Feed feed){
-        this.feed = feed;
+    public FeedItem(FeedChannel feedChannel){
+        this.feedChannel = feedChannel;
     }
 
     public String getDateDiff(){
@@ -31,6 +31,6 @@ public class FeedItem implements Serializable {
     }
 
     public String getSubtitle(){
-        return getDateDiff() + " · " + feed.title;
+        return getDateDiff() + " · " + feedChannel.title;
     }
 }

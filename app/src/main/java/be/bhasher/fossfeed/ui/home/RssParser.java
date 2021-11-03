@@ -19,10 +19,11 @@ import java.net.URL;
 
 import be.bhasher.fossfeed.MainActivity;
 import be.bhasher.fossfeed.R;
+import be.bhasher.fossfeed.utils.cache.AppDatabase;
 
 public class RssParser extends AsyncTask<Void, Void, Boolean> {
 
-    private final Feed feed = new Feed();
+    private final FeedChannel feedChannel = new FeedChannel();
     private final View view;
     private final SwipeRefreshLayout swipeRefreshLayout;
 
@@ -41,7 +42,7 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
         Reader reader = new InputStreamReader(inputStream);
         xmlPullParser.setInput(reader);
 
-        FeedItem current = new FeedItem(feed);
+        FeedItem current = new FeedItem(feedChannel);
 
         boolean inItem = false;
         boolean inChannel = false;
@@ -58,11 +59,11 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
 
                 else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_TITLE)){
                     if(inItem) current.title = xmlPullParser.nextText().trim();
-                    else if(inChannel) feed.title = xmlPullParser.nextText().trim();
+                    else if(inChannel) feedChannel.title = xmlPullParser.nextText().trim();
 
                 }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_LINK)){
                     if(inItem) current.link = xmlPullParser.nextText().trim();
-                    else if(inChannel) feed.link = xmlPullParser.nextText().trim();
+                    else if(inChannel) feedChannel.link = xmlPullParser.nextText().trim();
 
                 }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_AUTHOR)){
                     if(inItem) current.author = xmlPullParser.nextText().trim();
@@ -78,7 +79,7 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
 
                 }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_DESCRIPTION)){
                     if(inItem) current.description = xmlPullParser.nextText().trim();
-                    else if(inChannel) feed.description = xmlPullParser.nextText().trim();
+                    else if(inChannel) feedChannel.description = xmlPullParser.nextText().trim();
 
                 }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_PUB_DATE)
                 || xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM_TIME)){
@@ -88,14 +89,14 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
                     if(inItem) current.guid = xmlPullParser.nextText().trim();
 
                 }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_CHANNEL_LAST_BUILD_DATE)){
-                    if(inChannel) feed.lastBuild = xmlPullParser.nextText().trim();
+                    if(inChannel) feedChannel.lastBuild = xmlPullParser.nextText().trim();
                 }
 
             }else if(eventType == XmlPullParser.END_TAG){
                  if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM)){
                      inItem = false;
-                     feed.add(current);
-                     current = new FeedItem(feed);
+                     feedChannel.add(current);
+                     current = new FeedItem(feedChannel);
                  }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_CHANNEL)){
                      inChannel = false;
                  }
@@ -106,22 +107,25 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-        try {
-            URL url = new URL("https://www.nextinpact.com/rss-complet/254737/bcfad039771f7a519271d2d2ea905bd41c084e70b9e8fee3b4c0896ed64c3594");
-            InputStream inputStream = url.openConnection().getInputStream();
-            parseFeed(inputStream);
-            return true;
-        } catch (IOException | XmlPullParserException e) {
-            e.printStackTrace();
+        boolean success = true;
+        for(Feed feed: AppDatabase.getInstance().getAll()){
+            try {
+                URL url = new URL(feed.url);
+                InputStream inputStream = url.openConnection().getInputStream();
+                parseFeed(inputStream);
+            } catch (IOException | XmlPullParserException e) {
+                e.printStackTrace();
+                success = false;
+            }
         }
-        return false;
+        return success;
     }
 
     @Override
     protected void onPostExecute(Boolean success){
         if(success){
             final RecyclerView recyclerFeeds = view.findViewById(R.id.recyclerFeeds);
-            FeedAdapter feedAdapter = new FeedAdapter(feed);
+            FeedAdapter feedAdapter = new FeedAdapter(feedChannel);
             recyclerFeeds.setAdapter(feedAdapter);
         }else{
             Toast.makeText(MainActivity.context, "Error while scrapping", Toast.LENGTH_LONG).show();
