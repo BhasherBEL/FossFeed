@@ -20,15 +20,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 import be.bhasher.fossfeed.FeedItemActivity;
 import be.bhasher.fossfeed.R;
+import be.bhasher.fossfeed.utils.cache.DownloadImageView;
 
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public final FeedChannel feedChannel;
+    public final ArrayList<FeedItem> feedItems;
 
-    public FeedAdapter(FeedChannel feedChannel){
-        this.feedChannel = feedChannel;
+    public FeedAdapter(ArrayList<FeedItem> feedItems){
+        this.feedItems = feedItems;
     }
 
     @NonNull
@@ -41,10 +43,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewHolderFeed viewHolderFeed = (ViewHolderFeed) holder;
-        FeedItem feedItem = this.feedChannel.get(position);
+        FeedItem feedItem = this.feedItems.get(position);
         viewHolderFeed.title.setText(feedItem.title);
         viewHolderFeed.subtitle.setText(feedItem.getSubtitle());
-        if(feedItem.imageUrl != null) new DownloadImageTask(viewHolderFeed.image).execute(feedItem.imageUrl);
+        if(feedItem.imageUrl != null) new DownloadImageView(viewHolderFeed.image).execute(feedItem.imageUrl);
     }
 
     //TODO fix image bug
@@ -54,44 +56,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         viewHolderFeed.image.setImageDrawable(null);
     }
 
-    private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap>{
-        private final ImageView imageView;
-
-        public DownloadImageTask(ImageView imageView){
-            this.imageView = imageView;
-        }
-
-        @Override
-        public void onPostExecute(Bitmap bitmap){
-            imageView.setImageBitmap(bitmap);
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            return getImageBitmap(strings[0]);
-        }
-    }
-
-    private static Bitmap getImageBitmap(String url) {
-        Bitmap bm = null;
-        try {
-            URL aURL = new URL(url);
-            URLConnection conn = aURL.openConnection();
-            conn.connect();
-            InputStream is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is);
-            bm = BitmapFactory.decodeStream(bis);
-            bis.close();
-            is.close();
-        } catch (IOException e) {
-            Log.e("FeedAdapter.getImageBitmap", "Error getting bitmap", e);
-        }
-        return bm;
-    }
-
     @Override
     public int getItemCount() {
-        return this.feedChannel.size();
+        return this.feedItems.size();
     }
 
     class ViewHolderFeed extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -111,7 +78,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public void onClick(View view) {
             int position = getAdapterPosition();
             Intent intent = new Intent(view.getContext(), FeedItemActivity.class);
-            intent.putExtra("FeedItem", feedChannel.get(position));
+            intent.putExtra("FeedItem", feedItems.get(position));
             view.getContext().startActivity(intent);
         }
     }

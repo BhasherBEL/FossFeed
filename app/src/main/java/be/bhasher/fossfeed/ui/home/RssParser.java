@@ -18,14 +18,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 import be.bhasher.fossfeed.MainActivity;
 import be.bhasher.fossfeed.R;
 import be.bhasher.fossfeed.utils.cache.AppDatabase;
 
 public class RssParser extends AsyncTask<Void, Void, Boolean> {
-
-    private final FeedChannel feedChannel = new FeedChannel();
+    private final ArrayList<FeedItem> feedItems = new ArrayList<>();
     private final View view;
     private final SwipeRefreshLayout swipeRefreshLayout;
 
@@ -44,6 +45,7 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
         Reader reader = new InputStreamReader(inputStream);
         xmlPullParser.setInput(reader);
 
+        FeedChannel feedChannel = new FeedChannel();
         FeedItem current = new FeedItem(feedChannel);
 
         boolean inItem = false;
@@ -97,6 +99,7 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
             }else if(eventType == XmlPullParser.END_TAG){
                  if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_ITEM)){
                      inItem = false;
+                     feedItems.add(current);
                      feedChannel.add(current);
                      current = new FeedItem(feedChannel);
                  }else if(xmlPullParser.getName().equalsIgnoreCase(RSSKeywords.RSS_CHANNEL)){
@@ -110,6 +113,7 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... voids) {
         boolean success = true;
+
         for(Feed feed: AppDatabase.getInstance().getAll()){
             try {
                 URL url = new URL(feed.url);
@@ -126,8 +130,10 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean success){
         if(success){
+            feedItems.sort((o1, o2) -> (int) ((o2.getCalendarDate().getTimeInMillis() - o1.getCalendarDate().getTimeInMillis())/1000));
+
             final RecyclerView recyclerFeeds = view.findViewById(R.id.recyclerFeeds);
-            FeedAdapter feedAdapter = new FeedAdapter(feedChannel);
+            FeedAdapter feedAdapter = new FeedAdapter(feedItems);
             recyclerFeeds.setAdapter(feedAdapter);
         }else{
             Toast.makeText(MainActivity.context, "Error while scrapping", Toast.LENGTH_LONG).show();

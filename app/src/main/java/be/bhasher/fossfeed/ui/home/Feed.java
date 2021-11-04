@@ -13,6 +13,13 @@ public class Feed implements Serializable {
     @ColumnInfo(name = "url") public String url;
     //@ColumnInfo(name = "channels") public ArrayList<FeedChannel> feedChannels;
 
+    public Feed(){}
+
+    public Feed(String title, String url){
+        this.title = title;
+        this.url = url;
+    }
+
     public int getId() {
         return id;
     }

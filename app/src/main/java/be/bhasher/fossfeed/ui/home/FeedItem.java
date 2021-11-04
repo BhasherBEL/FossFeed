@@ -3,6 +3,7 @@ package be.bhasher.fossfeed.ui.home;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import be.bhasher.fossfeed.utils.DateUtils;
 
@@ -19,6 +20,15 @@ public class FeedItem implements Serializable {
 
     public FeedItem(FeedChannel feedChannel){
         this.feedChannel = feedChannel;
+    }
+
+    public Calendar getCalendarDate() {
+        try {
+            return DateUtils.parseDate(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String getDateDiff(){

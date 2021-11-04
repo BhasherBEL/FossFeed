@@ -21,7 +21,7 @@
     </style>
 
     <style name="ItemSubTitle">
-        <item name="color">#AAAAAA</item>
+        <item name="color">@color/subtitle</item>
         <item name="android:textSize">10sp</item>
         <item name="android:textStyle">bold</item>
     </style>
