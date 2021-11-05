@@ -1,6 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="10dp">
 
+    <TextView
+        android:id="@+id/newsub_titletext"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:text="Title"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/newsub_titleinput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/newsub_titletext">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/newsub_titleinputedit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title (optional)" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/newsub_urltext"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="30dp"
+        android:text="URL"
+        app:layout_constraintTop_toBottomOf="@id/newsub_titleinput"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/newsub_urlinput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/newsub_urltext">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/newsub_urlinputedit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Subscription URL"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/newsub_button"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:text="ADD"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/newsub_urlinput"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

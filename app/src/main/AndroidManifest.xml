@@ -27,6 +27,12 @@
             android:parentActivityName=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.FossFeed.NoActionBar"/>
+
+        <activity
+            android:name=".NewSubActivity"
+            android:parentActivityName=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.FossFeed.NoActionBar"/>
     </application>
 
 </manifest>

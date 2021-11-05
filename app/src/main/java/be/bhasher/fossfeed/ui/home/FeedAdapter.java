@@ -1,25 +1,15 @@
 package be.bhasher.fossfeed.ui.home;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 
 import be.bhasher.fossfeed.FeedItemActivity;
@@ -37,7 +27,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater view = LayoutInflater.from(parent.getContext());
-        return new ViewHolderFeed(view.inflate(R.layout.card_feed, parent, false));
+        return new ViewHolderFeed(view.inflate(R.layout.card_item, parent, false));
     }
 
     @Override

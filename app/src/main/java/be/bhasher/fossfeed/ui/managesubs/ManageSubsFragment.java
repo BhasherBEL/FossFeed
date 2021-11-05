@@ -1,31 +1,34 @@
-package be.bhasher.fossfeed.ui.managefeeds;
+package be.bhasher.fossfeed.ui.managesubs;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
-import be.bhasher.fossfeed.databinding.FragmentManagefeedsBinding;
+import be.bhasher.fossfeed.NewSubActivity;
+import be.bhasher.fossfeed.R;
+import be.bhasher.fossfeed.databinding.FragmentManagesubsBinding;
 
-public class ManageFeedsFragment extends Fragment {
-    private FragmentManagefeedsBinding binding;
+public class ManageSubsFragment extends Fragment {
+    private FragmentManagesubsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        binding = FragmentManagefeedsBinding.inflate(inflater, container, false);
+        binding = FragmentManagesubsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textManagefeeds;
+        Button button = root.findViewById(R.id.managesubs_addbutton);
 
-        textView.setText("Manage your feeds");
+        button.setOnClickListener(v -> requireContext().startActivity(new Intent(getContext(), NewSubActivity.class)));
+
+        new SubsAdapter.Init(root).execute();
 
         return root;
     }

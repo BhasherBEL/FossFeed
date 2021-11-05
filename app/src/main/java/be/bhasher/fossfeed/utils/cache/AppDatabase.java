@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase;
 import be.bhasher.fossfeed.MainActivity;
 import be.bhasher.fossfeed.ui.home.Feed;
 
-@Database(entities = {Feed.class}, version = 1)
+@Database(entities = {Feed.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract FeedsDAO feedsDAO();
 
