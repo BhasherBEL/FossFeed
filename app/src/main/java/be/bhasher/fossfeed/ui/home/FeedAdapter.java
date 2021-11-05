@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 import be.bhasher.fossfeed.FeedItemActivity;
@@ -36,7 +38,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         FeedItem feedItem = this.feedItems.get(position);
         viewHolderFeed.title.setText(feedItem.title);
         viewHolderFeed.subtitle.setText(feedItem.getSubtitle());
-        if(feedItem.imageUrl != null) new DownloadImageView(viewHolderFeed.image).execute(feedItem.imageUrl);
+        if(feedItem.imageUrl != null) Picasso.get().load(feedItem.imageUrl).into(viewHolderFeed.image);
     }
 
     //TODO fix image bug

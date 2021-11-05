@@ -24,12 +24,11 @@ public class FeedManager {
 
         @Override
         protected List<FeedItem> doInBackground(Void... voids) {
-            return AppDatabase.itemsDAO.getAllByTime(10);
+            return AppDatabase.itemsDAO.getAllByTime();
         }
 
         @Override
         protected void onPostExecute(List<FeedItem> feedItems){
-            System.out.println(feedItems.size() + " items found !");
             feedItems.sort((o1, o2) -> (int) ((o2.getCalendarDate().getTimeInMillis() - o1.getCalendarDate().getTimeInMillis())/1000));
 
             final RecyclerView recyclerFeeds = view.findViewById(R.id.recyclerFeeds);

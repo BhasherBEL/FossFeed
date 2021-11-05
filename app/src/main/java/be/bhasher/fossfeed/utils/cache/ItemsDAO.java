@@ -16,7 +16,10 @@ public interface ItemsDAO {
     List<FeedItem> getAll();
 
     @Query("SELECT * FROM FEEDITEMS ORDER BY timestamp DESC LIMIT :i")
-    List<FeedItem> getAllByTime(int i);
+    List<FeedItem> getAllByTimeWithLimit(int i);
+
+    @Query("SELECT * FROM FEEDITEMS ORDER BY timestamp DESC")
+    List<FeedItem> getAllByTime();
 
     @Query("SELECT COUNT(*)>0 FROM FEEDITEMS/*,FEEDCHANNELS*/ WHERE timestamp=:timestamp AND FEEDITEMS.title=:title/* AND FEEDCHANNELS.title=:channelTitle*/")
     boolean has(long timestamp, String title/*, String channelTitle*/);
@@ -29,4 +32,7 @@ public interface ItemsDAO {
 
     @Delete
     void delete(FeedItem feeditem);
+
+    @Query("DELETE FROM FEEDITEMS")
+    void deleteAll();
 }

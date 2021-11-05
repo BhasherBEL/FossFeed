@@ -9,12 +9,16 @@ import android.os.Bundle;
 import android.text.Html;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.text.HtmlCompat;
 
+import com.squareup.picasso.Picasso;
+
 import be.bhasher.fossfeed.databinding.ActivityFeeditemBinding;
 import be.bhasher.fossfeed.ui.home.FeedItem;
+import be.bhasher.fossfeed.ui.home.OnSwipeListener;
 import be.bhasher.fossfeed.utils.DownloadImage;
 import be.bhasher.fossfeed.utils.DownloadImageView;
 
@@ -42,7 +46,7 @@ public class FeedItemActivity extends AppCompatActivity {
 
             ImageView imageView = findViewById(R.id.FeedItemImage);
 
-            if(feedItem.imageUrl != null) new DownloadImageView(imageView).execute(feedItem.imageUrl);
+            if(feedItem.imageUrl != null) Picasso.get().load(feedItem.imageUrl).into(imageView);;
 
             TextView subtitleView = findViewById(R.id.FeedItemSubtitle);
             subtitleView.setText(feedItem.getSubtitle());
