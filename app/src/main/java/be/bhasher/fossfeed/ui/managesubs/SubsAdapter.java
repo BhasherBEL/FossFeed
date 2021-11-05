@@ -70,7 +70,7 @@ public class SubsAdapter extends RecyclerView.Adapter<SubsAdapter.ViewHolderFeed
 
         @Override
         protected Boolean doInBackground(String... strings) {
-            AppDatabase.getInstance().delete(feed);
+            AppDatabase.feedsDAO.delete(feed);
             return true;
         }
     }
@@ -84,7 +84,7 @@ public class SubsAdapter extends RecyclerView.Adapter<SubsAdapter.ViewHolderFeed
 
         @Override
         protected List<Feed> doInBackground(String... strings) {
-            return AppDatabase.getInstance().getAll();
+            return AppDatabase.feedsDAO.getAll();
         }
 
         @Override

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import be.bhasher.fossfeed.FeedItemActivity;
 import be.bhasher.fossfeed.R;
-import be.bhasher.fossfeed.utils.cache.DownloadImageView;
+import be.bhasher.fossfeed.utils.DownloadImageView;
 
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public final ArrayList<FeedItem> feedItems;

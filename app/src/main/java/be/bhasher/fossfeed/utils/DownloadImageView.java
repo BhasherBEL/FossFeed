@@ -1,4 +1,4 @@
-package be.bhasher.fossfeed.utils.cache;
+package be.bhasher.fossfeed.utils;
 
 import android.graphics.Bitmap;
 import android.widget.ImageView;

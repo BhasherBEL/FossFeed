@@ -6,15 +6,14 @@ import androidx.room.RoomDatabase;
 
 import be.bhasher.fossfeed.MainActivity;
 import be.bhasher.fossfeed.ui.home.Feed;
+import be.bhasher.fossfeed.ui.home.FeedItem;
 
-@Database(entities = {Feed.class}, version = 2)
+@Database(entities = {Feed.class, FeedItem.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract FeedsDAO feedsDAO();
+    public abstract ItemsDAO itemsDAO();
 
     private static final AppDatabase db = Room.databaseBuilder(MainActivity.context, AppDatabase.class, "fossfeed_db").build();
-    private static final FeedsDAO feedsDAO = db.feedsDAO();
-
-    public static FeedsDAO getInstance(){
-       return feedsDAO;
-    }
+    public static final FeedsDAO feedsDAO = db.feedsDAO();
+    public static final ItemsDAO itemsDAO = db.itemsDAO();
 }

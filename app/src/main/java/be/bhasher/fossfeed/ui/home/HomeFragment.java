@@ -11,6 +11,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 import be.bhasher.fossfeed.R;
+import be.bhasher.fossfeed.ui.home.db.FeedDB;
+import be.bhasher.fossfeed.ui.home.db.ItemsDB;
 
 public class HomeFragment extends Fragment{
 
@@ -19,10 +21,12 @@ public class HomeFragment extends Fragment{
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        new RssParser(view).execute();
+        //new RssParser(view).execute();
+        new FeedDB.UpdateAllFeedItems().execute();
+        new FeedManager.UpdateDisplayedFeedItems(view, null).execute();
 
         SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshFeeds);
-        swipeRefreshLayout.setOnRefreshListener(() -> new RssParser(view, swipeRefreshLayout).execute());
+        swipeRefreshLayout.setOnRefreshListener(() -> new FeedManager.UpdateDisplayedFeedItems(view, swipeRefreshLayout).execute());
 
         return view;
     }

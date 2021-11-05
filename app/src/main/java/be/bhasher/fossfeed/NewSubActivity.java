@@ -10,7 +10,6 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import be.bhasher.fossfeed.databinding.ActivityNewsubBinding;
 import be.bhasher.fossfeed.ui.home.Feed;
-import be.bhasher.fossfeed.ui.managesubs.SubsAdapter;
 import be.bhasher.fossfeed.utils.cache.AppDatabase;
 
 public class NewSubActivity extends AppCompatActivity {
@@ -44,7 +43,7 @@ public class NewSubActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(String... strings) {
-            AppDatabase.getInstance().insert(new Feed(title, url));
+            AppDatabase.feedsDAO.insert(new Feed(title, url));
             return true;
         }
 

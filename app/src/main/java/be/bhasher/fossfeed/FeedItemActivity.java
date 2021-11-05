@@ -2,33 +2,21 @@ package be.bhasher.fossfeed;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.text.LineBreaker;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.text.HtmlCompat;
-
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 
 import be.bhasher.fossfeed.databinding.ActivityFeeditemBinding;
 import be.bhasher.fossfeed.ui.home.FeedItem;
 import be.bhasher.fossfeed.utils.DownloadImage;
-import be.bhasher.fossfeed.utils.cache.DownloadImageView;
+import be.bhasher.fossfeed.utils.DownloadImageView;
 
 public class FeedItemActivity extends AppCompatActivity {
     private ActivityFeeditemBinding binding;
