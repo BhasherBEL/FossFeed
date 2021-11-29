@@ -1,12 +1,15 @@
 package be.bhasher.fossfeed;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +26,7 @@ import be.bhasher.fossfeed.utils.DownloadImage;
 import be.bhasher.fossfeed.utils.DownloadImageView;
 
 public class FeedItemActivity extends AppCompatActivity {
+
     private ActivityFeeditemBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,14 @@ public class FeedItemActivity extends AppCompatActivity {
 
             TextView subtitleView = findViewById(R.id.FeedItemSubtitle);
             subtitleView.setText(feedItem.getSubtitle());
+
+            Button backButton = findViewById(R.id.feeditem_backbutton);
+            backButton.setOnClickListener(v -> onBackPressed());
+
+            Button openButton = findViewById(R.id.feeditem_openbutton);
+            openButton.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(feedItem.link))));
+
+            feedItem.markAsRead();
         }
     }
 }

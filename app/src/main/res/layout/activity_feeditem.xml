@@ -60,6 +60,31 @@
                 android:textIsSelectable="true"
                 android:justificationMode="inter_word"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:weightSum="2"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/feeditem_backbutton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:layout_height="match_parent"
+                    android:text="BACK"/>
+
+                <Button
+                    android:id="@+id/feeditem_openbutton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:layout_height="match_parent"
+                    android:text="OPEN in browser"/>
+
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

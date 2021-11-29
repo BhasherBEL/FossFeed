@@ -13,6 +13,7 @@ import be.bhasher.fossfeed.R;
 import be.bhasher.fossfeed.utils.cache.AppDatabase;
 
 public class FeedManager {
+
     public static class UpdateDisplayedFeedItems extends AsyncTask<Void, Void, List<FeedItem>> {
         private final View view;
         private final SwipeRefreshLayout swipeRefreshLayout;

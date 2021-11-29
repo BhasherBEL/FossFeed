@@ -1,7 +1,8 @@
 package be.bhasher.fossfeed.ui.home;
 
+import android.os.AsyncTask;
+
 import androidx.room.ColumnInfo;
-import androidx.room.Database;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -14,6 +15,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import be.bhasher.fossfeed.utils.DateUtils;
+import be.bhasher.fossfeed.utils.cache.AppDatabase;
 
 @Entity(tableName = "feeditems")
 public class FeedItem implements Serializable{
@@ -30,6 +32,7 @@ public class FeedItem implements Serializable{
     // TODO implement
     @Ignore public final List<String> categories = new ArrayList<>();
     @Embedded public final FeedChannel feedChannel;
+    @Ignore public static int LAST_INDEX = Integer.MIN_VALUE;
 
     public FeedItem(FeedChannel feedChannel){
         this.feedChannel = feedChannel;
@@ -46,6 +49,19 @@ public class FeedItem implements Serializable{
 
     public String getDate(){
         return this.date;
+    }
+
+    public void markAsRead(){
+        read = true;
+        new MarkRead().execute(this);
+    }
+
+    private static class MarkRead extends AsyncTask<FeedItem, Void, Void>{
+        @Override
+        protected Void doInBackground(FeedItem... feedItems) {
+            AppDatabase.itemsDAO.update(feedItems[0]);
+            return null;
+        }
     }
 
     public Calendar getCalendarDate() {
