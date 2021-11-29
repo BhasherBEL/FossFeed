@@ -11,9 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import be.bhasher.fossfeed.MainActivity;
 import be.bhasher.fossfeed.NewSubActivity;
 import be.bhasher.fossfeed.R;
 import be.bhasher.fossfeed.databinding.FragmentManagesubsBinding;
+import be.bhasher.fossfeed.ui.home.FeedAdapter;
+import be.bhasher.fossfeed.ui.home.FeedItem;
 
 public class ManageSubsFragment extends Fragment {
     private FragmentManagesubsBinding binding;
@@ -31,6 +34,12 @@ public class ManageSubsFragment extends Fragment {
         new SubsAdapter.Init(root).execute();
 
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) requireActivity()).setSubActionBarIcon(-1);
     }
 
     @Override

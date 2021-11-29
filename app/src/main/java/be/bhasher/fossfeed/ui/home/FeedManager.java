@@ -14,6 +14,8 @@ import be.bhasher.fossfeed.utils.cache.AppDatabase;
 
 public class FeedManager {
 
+    public static boolean hideRead = false;
+
     public static class UpdateDisplayedFeedItems extends AsyncTask<Void, Void, List<FeedItem>> {
         private final View view;
         private final SwipeRefreshLayout swipeRefreshLayout;
@@ -33,7 +35,7 @@ public class FeedManager {
             feedItems.sort((o1, o2) -> (int) ((o2.getCalendarDate().getTimeInMillis() - o1.getCalendarDate().getTimeInMillis())/1000));
 
             final RecyclerView recyclerFeeds = view.findViewById(R.id.recyclerFeeds);
-            FeedAdapter feedAdapter = new FeedAdapter((ArrayList<FeedItem>) feedItems);
+            FeedAdapter feedAdapter = new FeedAdapter((ArrayList<FeedItem>) feedItems, false);
             recyclerFeeds.setAdapter(feedAdapter);
             if(this.swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
         }

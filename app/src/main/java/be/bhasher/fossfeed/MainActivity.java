@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -15,6 +17,8 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import org.w3c.dom.Text;
 
 import be.bhasher.fossfeed.databinding.ActivityMainBinding;
 
@@ -45,6 +49,17 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+    }
+
+    public void setSubActionBarIcon(int resId){
+        /*
+        ImageView imageView = findViewById(R.id.toolbarIcon);
+        if(resId == -1) imageView.setImageAlpha(0);
+        else{
+            imageView.setImageResource(resId);
+            imageView.setImageAlpha(255);
+        }
+         */
     }
 
     @Override

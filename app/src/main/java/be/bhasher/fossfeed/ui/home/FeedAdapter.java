@@ -22,9 +22,9 @@ import be.bhasher.fossfeed.utils.DownloadImageView;
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public final ArrayList<FeedItem> feedItems;
 
-    public FeedAdapter(ArrayList<FeedItem> feedItems){
+    public FeedAdapter(ArrayList<FeedItem> feedItems, boolean hideRead){
         this.feedItems = feedItems;
-        //this.feedItems.removeIf(feedItem -> feedItem.read);
+        //if(hideRead) this.feedItems.removeIf(feedItem -> feedItem.read);
     }
 
     @NonNull
@@ -47,7 +47,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if(feedItem.imageUrl != null) Picasso.get().load(feedItem.imageUrl).into(viewHolderFeed.image);
         if(feedItem.read) viewHolderFeed.image.setImageAlpha(0x55);
         else viewHolderFeed.image.setImageAlpha(0xFF);
-        System.out.println(position + " - " + feedItem.read + " - " + feedItem.title);
     }
 
     @Override
@@ -60,9 +59,13 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.notifyItemChanged(i);
     }
 
+    public void markAsRead(int i){
+        FeedItem feedItem = this.feedItems.get(i);
+        feedItem.markAsRead();
+        notifyAsRead(i);
+    }
 
-
-    class ViewHolderFeed extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolderFeed extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final ImageView image;
         private final TextView title;
         private final TextView subtitle;
